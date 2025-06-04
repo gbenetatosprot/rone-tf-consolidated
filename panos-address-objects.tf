@@ -1,14 +1,17 @@
 resource "panos_address_object" "rfc1918" {
   for_each = {
-    for fw_key, fw in var.firewalls :
-    for obj_key, obj in local.address_objects :
-    "${fw_key}_${obj_key}" => {
-      hostname    = fw.hostname
-      username    = fw.username
-      obj_name    = obj_key
-      value       = obj.value
-      description = obj.description
-    }
+    for combo in flatten([
+      for fw_key, fw in var.firewalls : [
+        for obj_key, obj in local.address_objects : {
+          key         = "${fw_key}_${obj_key}"
+          hostname    = fw.hostname
+          username    = fw.username
+          obj_name    = obj_key
+          value       = obj.value
+          description = obj.description
+        }
+      ]
+    ]) : combo.key => combo
   }
 
   name        = each.value.obj_name
