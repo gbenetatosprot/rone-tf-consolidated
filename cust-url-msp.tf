@@ -1,166 +1,155 @@
 # ------------------- FW1 -------------------
 
-resource "panos_custom_url_category" "fw1_msp_block" {
-  provider    = panos.fw1
-  name        = "rone-msp-block"
-  description = "rone-msp-block"
-  sites = [
-    "*.ccenter.tech/",
-    "*.cityfederalcv.com/",
-    "*.crossvalleyfcv.org/",
-    "*.emailaccess-expirynotification.com/",
-    "*.emailaccess-passwordnotice.com/",
-    "*.expirationrequest-passwordreminder.com/",
-    "*.expiryrequest-mailaccess.com/",
-    "*.liparicasa.it/",
-    "*.losgaucos.com/",
-    "*.oufcv.com/",
-    "*.portconnfcuu.com/",
-    "*.realmetaldns.com/",
-    "*.rotation.ahrealestatepr.com/",
-    "*.skyudrive.com",
-    "*.synology.ink",
-    "*.triboro-fcv.org/",
-    "ccenter.tech",
-    "finconsult.cc/",
-    "rotation.ahrealestatepr.com/",
-    "skyudrive.com"
-  ]
-  type = data.panos_system_info.fw1.version_major >= 9 ? "URL List" : ""
+resource "panos_security_profile_group" "fw1_sec_profile_inbound" {
+  provider               = panos.fw1
+  name                   = "rone-ibound-spg"
+  anti_spyware_profile   = panos_anti_spyware_security_profile.fw1_asp_profile.name
+  vulnerability_profile  = panos_vulnerability_security_profile.fw1_vuln_profile.name
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "panos_custom_url_category" "fw1_msp_allow" {
-  provider    = panos.fw1
-  name        = "rone-msp-allow"
-  description = "rone-msp-allow"
-  sites = [
-    "*.amazontrust.com",
-    "*.azure.com",
-    "*.azureedge.net",
-    "*.azurerms.com",
-    "*.binding101.com/",
-    "*.cloud.tanium.com",
-    "*.cloudfront.net",
-    "*.cloudsink.net",
-    "*.cribl.cloud",
-    "*.crowdstrike.com",
-    "*.darktrace.com",
-    "*.datorama.com",
-    "*.digicert.com",
-    "*.edgesuite.net",
-    "*.entrust.net",
-    "*.esha.com",
-    "*.github.com",
-    "*.identrust.com",
-    "*.informationprotection.azure.com",
-    "*.launchpad.net",
-    "*.letsencrypt.org",
-    "*.linxas.tools",
-    "*.live.com",
-    "*.live.net",
-    "*.livefilestore.com",
-    "*.mesh.com",
-    "*.microsoft-tst.com",
-    "*.microsoft.com",
-    "*.microsoftonline-p.com",
-    "*.microsoftonline.com",
-    "*.msauth.net",
-    "*.msauthimages.net",
-    "*.msecnd.net",
-    "*.msftauth.net",
-    "*.msftauthimages.net",
-    "*.msftcloudes.com",
-    "*.msftconnecttest.com",
-    "*.msftidentity.com",
-    "*.msidentity.com",
-    "*.msn.com",
-    "*.ntp.org",
-    "*.o365weve.com",
-    "*.office.com",
-    "*.office.net",
-    "*.office365.com",
-    "*.omniroot.com",
-    "*.ondemand.com",
-    "*.oneclient.sfx.ms",
-    "*.onedrive.com",
-    "*.onenote.com",
-    "*.oracleoutsourcing.com",
-    "*.protera.com",
-    "*.sap.com",
-    "*.sharepoint.com",
-    "*.sharepointonline.com",
-    "*.suse.com",
-    "*.susecloud.net",
-    "*.symantec.com",
-    "*.symcb.com",
-    "*.symcd.com",
-    "*.tableau.com",
-    "*.tanium.com",
-    "*.ubuntu.com",
-    "*.update.microsoft.com",
-    "*.verisign.com",
-    "*.verisign.net",
-    "*.windows.net",
-    "*.windowsazure.com",
-    "*.windowsupdate.com",
-    "*.windowsupdates.microsoft.com",
-    "account.activedirectory.windowsazure.com",
-    "aka.ms/",
-    "amp.azure.net",
-    "api.mapbox.com",
-    "apis.live.net",
-    "archive.ubuntu.com",
-    "autologon.microsoftazuread-sso.com",
-    "clientconfig.microsoftonline-p.net",
-    "commgw.protera.com",
-    "crwd.s3.us-east-2.amazonaws.com",
-    "ent-shasta-rrs.symantec.com",
-    "fabric.io",
-    "flpnwc-g9a84e0b47.dispatcher.hana.ondemand.com",
-    "flpnwc-s354bfe2f3.dispatcher.hana.ondemand.com",
-    "github.com",
-    "global-protera-ms-zsb1.cloud.tanium.com",
-    "global-protera-ms-zsb2.cloud.tanium.com",
-    "informationprotection.hosting.portal.azure.net",
-    "ipchicken.com",
-    "lfodown01-b.cloudsink.net",
-    "lfodown01-gyr-maverick.cloudsink.net",
-    "lfodown01-lanner-lion.cloudsink.net",
-    "linux-repo.us.securitycloud.symantec.com",
-    "liveupdate.symantec.com",
-    "liveupdate.symantecliveupdate.com",
-    "management.azure.com",
-    "policykeyservice.dc.ad.msft.net",
-    "protutilities.s3.us-east-2.amazonaws.com",
-    "shellprod.msocdn.com",
-    "workspaces.us-east-1.amazonaws.com",
-    "*.inky.com",
-    "*.oracle.com",
-    "*.googleapis.com/",
-    "*.aka.ms/*",
-    "^.aka.ms/",
-    "*.oraclecloud.com/*",
-    "oraclecloud.com/",
-    "^.oraclecloud.com/"
-  ]
-  type = data.panos_system_info.fw1.version_major >= 9 ? "URL List" : ""
+resource "panos_security_profile_group" "fw1_sec_profile_outbound" {
+  provider                = panos.fw1
+  name                    = "rone-outbound-spg"
+  anti_spyware_profile    = panos_anti_spyware_security_profile.fw1_asp_profile.name
+  vulnerability_profile   = panos_vulnerability_security_profile.fw1_vuln_profile.name
+  url_filtering_profile   = panos_url_filtering_security_profile.fw1_url_profile.name
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "panos_custom_url_category" "fw1_external_url" {
-  provider    = panos.fw1
-  name        = "rone-external-url"
-  description = "rone-external-url"
-  sites       = ["protera.com"]
-  type        = data.panos_system_info.fw1.version_major >= 9 ? "URL List" : ""
+resource "panos_url_filtering_security_profile" "fw1_url_profile" {
+  provider                      = panos.fw1
+  name                          = "rone-deafult-content-category"
+  description                   = "rone-deafult-content-category"
+  log_container_page_only       = true
+  block_categories              = ["adult", "abortion", "command-and-control", "cryptocurrency", "extremism", "gambling", "hacking", "high-risk", "malware", "nudity", "phishing", "questionable", "ransomware", "sex-education", panos_custom_url_category.fw1_external_url.name]
+  alert_categories              = ["unknown", "medium-risk", "parked", "peer-to-peer", "proxy-avoidance-and-anonymizers", "real-time-detection", "shareware-and-freeware"]
+  allow_categories              = [panos_custom_url_category.fw1_msp_allow.name, panos_custom_url_category.fw1_msp_block.name]
+  ucd_mode                      = "disabled"
+  ucd_log_severity              = data.panos_system_info.fw1.version_major > 8 ? "medium" : ""
 
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "panos_anti_spyware_security_profile" "fw1_asp_profile" {
+  provider    = panos.fw1
+  name        = "rone-asp"
+  description = "rone-asp"
+  rule {
+    name            = "simple-critical"
+    threat_name     = "any"
+    category        = "any"
+    action          = "drop"
+    packet_capture  = "extended-capture"
+    severities      = ["critical"]
+  }
+  rule {
+    name            = "simple-high"
+    threat_name     = "any"
+    category        = "any"
+    action          = "drop"
+    packet_capture  = "extended-capture"
+    severities      = ["high"]
+  }
+  rule {
+    name            = "simple-medium"
+    threat_name     = "any"
+    category        = "any"
+    action          = "default"
+    packet_capture  = "single-packet"
+    severities      = ["medium"]
+  }
+  rule {
+    name            = "low"
+    threat_name     = "any"
+    category        = "any"
+    action          = "alert"
+    packet_capture  = "disable"
+    severities      = ["low"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "panos_vulnerability_security_profile" "fw1_vuln_profile" {
+  provider    = panos.fw1
+  name        = "rone-vuln"
+  description = "rone-vuln"
+  rule {
+    name            = "simple-client-critical"
+    category        = "any"
+    threat_name     = "any"
+    action          = "drop"
+    host            = "client"
+    severities      = ["critical"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "extended-capture"
+  }
+  rule {
+    name            = "simple-client-high"
+    category        = "any"
+    threat_name     = "any"
+    action          = "drop"
+    host            = "client"
+    severities      = ["high"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "extended-capture"
+  }
+  rule {
+    name            = "simple-client-medium"
+    category        = "any"
+    threat_name     = "any"
+    action          = "default"
+    host            = "client"
+    severities      = ["medium"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "single-packet"
+  }
+  rule {
+    name            = "simple-server-critical"
+    category        = "any"
+    threat_name     = "any"
+    action          = "drop"
+    host            = "server"
+    severities      = ["critical"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "extended-capture"
+  }
+  rule {
+    name            = "simple-server-high"
+    category        = "any"
+    threat_name     = "any"
+    action          = "drop"
+    host            = "server"
+    severities      = ["high"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "extended-capture"
+  }
+  rule {
+    name            = "simple-server-medium"
+    category        = "any"
+    threat_name     = "any"
+    action          = "default"
+    host            = "server"
+    severities      = ["medium"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "single-packet"
+  }
   lifecycle {
     create_before_destroy = true
   }
@@ -168,37 +157,156 @@ resource "panos_custom_url_category" "fw1_external_url" {
 
 # ------------------- FW2 -------------------
 
-resource "panos_custom_url_category" "fw2_msp_block" {
-  provider    = panos.fw2
-  name        = "rone-msp-block"
-  description = "rone-msp-block"
-  sites       = panos_custom_url_category.fw1_msp_block.sites
-  type        = data.panos_system_info.fw2.version_major >= 9 ? "URL List" : ""
+resource "panos_security_profile_group" "fw2_sec_profile_inbound" {
+  provider               = panos.fw2
+  name                   = "rone-ibound-spg"
+  anti_spyware_profile   = panos_anti_spyware_security_profile.fw2_asp_profile.name
+  vulnerability_profile  = panos_vulnerability_security_profile.fw2_vuln_profile.name
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "panos_custom_url_category" "fw2_msp_allow" {
-  provider    = panos.fw2
-  name        = "rone-msp-allow"
-  description = "rone-msp-allow"
-  sites       = panos_custom_url_category.fw1_msp_allow.sites
-  type        = data.panos_system_info.fw2.version_major >= 9 ? "URL List" : ""
+resource "panos_security_profile_group" "fw2_sec_profile_outbound" {
+  provider                = panos.fw2
+  name                    = "rone-outbound-spg"
+  anti_spyware_profile    = panos_anti_spyware_security_profile.fw2_asp_profile.name
+  vulnerability_profile   = panos_vulnerability_security_profile.fw2_vuln_profile.name
+  url_filtering_profile   = panos_url_filtering_security_profile.fw2_url_profile.name
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "panos_custom_url_category" "fw2_external_url" {
-  provider    = panos.fw2
-  name        = "rone-external-url"
-  description = "rone-external-url"
-  sites       = panos_custom_url_category.fw1_external_url.sites
-  type        = data.panos_system_info.fw2.version_major >= 9 ? "URL List" : ""
+resource "panos_url_filtering_security_profile" "fw2_url_profile" {
+  provider                      = panos.fw2
+  name                          = "rone-deafult-content-category"
+  description                   = "rone-deafult-content-category"
+  log_container_page_only       = true
+  block_categories              = ["adult", "abortion", "command-and-control", "cryptocurrency", "extremism", "gambling", "hacking", "high-risk", "malware", "nudity", "phishing", "questionable", "ransomware", "sex-education", panos_custom_url_category.fw2_external_url.name]
+  alert_categories              = ["unknown", "medium-risk", "parked", "peer-to-peer", "proxy-avoidance-and-anonymizers", "real-time-detection", "shareware-and-freeware"]
+  allow_categories              = [panos_custom_url_category.fw2_msp_allow.name, panos_custom_url_category.fw2_msp_block.name]
+  ucd_mode                      = "disabled"
+  ucd_log_severity              = data.panos_system_info.fw2.version_major > 8 ? "medium" : ""
 
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "panos_anti_spyware_security_profile" "fw2_asp_profile" {
+  provider    = panos.fw2
+  name        = "rone-asp"
+  description = "rone-asp"
+  rule {
+    name            = "simple-critical"
+    threat_name     = "any"
+    category        = "any"
+    action          = "drop"
+    packet_capture  = "extended-capture"
+    severities      = ["critical"]
+  }
+  rule {
+    name            = "simple-high"
+    threat_name     = "any"
+    category        = "any"
+    action          = "drop"
+    packet_capture  = "extended-capture"
+    severities      = ["high"]
+  }
+  rule {
+    name            = "simple-medium"
+    threat_name     = "any"
+    category        = "any"
+    action          = "default"
+    packet_capture  = "single-packet"
+    severities      = ["medium"]
+  }
+  rule {
+    name            = "low"
+    threat_name     = "any"
+    category        = "any"
+    action          = "alert"
+    packet_capture  = "disable"
+    severities      = ["low"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "panos_vulnerability_security_profile" "fw2_vuln_profile" {
+  provider    = panos.fw2
+  name        = "rone-vuln"
+  description = "rone-vuln"
+  rule {
+    name            = "simple-client-critical"
+    category        = "any"
+    threat_name     = "any"
+    action          = "drop"
+    host            = "client"
+    severities      = ["critical"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "extended-capture"
+  }
+  rule {
+    name            = "simple-client-high"
+    category        = "any"
+    threat_name     = "any"
+    action          = "drop"
+    host            = "client"
+    severities      = ["high"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "extended-capture"
+  }
+  rule {
+    name            = "simple-client-medium"
+    category        = "any"
+    threat_name     = "any"
+    action          = "default"
+    host            = "client"
+    severities      = ["medium"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "single-packet"
+  }
+  rule {
+    name            = "simple-server-critical"
+    category        = "any"
+    threat_name     = "any"
+    action          = "drop"
+    host            = "server"
+    severities      = ["critical"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "extended-capture"
+  }
+  rule {
+    name            = "simple-server-high"
+    category        = "any"
+    threat_name     = "any"
+    action          = "drop"
+    host            = "server"
+    severities      = ["high"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "extended-capture"
+  }
+  rule {
+    name            = "simple-server-medium"
+    category        = "any"
+    threat_name     = "any"
+    action          = "default"
+    host            = "server"
+    severities      = ["medium"]
+    cves            = ["any"]
+    vendor_ids      = ["any"]
+    packet_capture  = "single-packet"
+  }
   lifecycle {
     create_before_destroy = true
   }
