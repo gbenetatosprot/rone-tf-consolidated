@@ -13,7 +13,7 @@ resource "panos_address_object" "rfc1918" {
     ]) : combo.key => combo
   }
 
-  provider = panos.${each.value.fw_key}
+  provider = local.panos_providers[each.value.fw_key]
 
   name        = each.value.obj_name
   value       = each.value.value
@@ -27,7 +27,7 @@ resource "panos_address_object" "rfc1918" {
 resource "panos_address_group" "rfc1918_group" {
   for_each = var.firewalls
 
-  provider = panos.${each.key}
+  provider = local.panos_providers[each.key]
 
   name        = "RFC-1918"
   description = "RFC-1918"
