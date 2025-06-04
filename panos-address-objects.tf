@@ -1,7 +1,6 @@
-# ==================== FW1 ====================
+# ========== FW1 ==========
 resource "panos_address_object" "fw1_rfc1918" {
   for_each = local.address_objects
-
   provider = panos.fw1
 
   name        = each.key
@@ -30,10 +29,9 @@ resource "panos_address_group" "fw1_rfc1918_group" {
   }
 }
 
-# ==================== FW2 ====================
+# ========== FW2 ==========
 resource "panos_address_object" "fw2_rfc1918" {
   for_each = local.address_objects
-
   provider = panos.fw2
 
   name        = each.key
