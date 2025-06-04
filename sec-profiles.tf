@@ -3,7 +3,7 @@
 # ================================================================
 
 resource "panos_anti_spyware_security_profile" "fw1_asp_profile" {
-  provider = panos.fw1
+  provider    = panos.fw1
   name        = "rone-asp"
   description = "rone-asp"
 
@@ -49,14 +49,14 @@ resource "panos_anti_spyware_security_profile" "fw1_asp_profile" {
 }
 
 resource "panos_vulnerability_security_profile" "fw1_vuln_profile" {
-  provider = panos.fw1
+  provider    = panos.fw1
   name        = "rone-vuln"
   description = "rone-vuln"
 
   rule {
     name           = "simple-client-critical"
-    threat_name    = "any"
     category       = "any"
+    threat_name    = "any"
     action         = "drop"
     host           = "client"
     severities     = ["critical"]
@@ -67,8 +67,8 @@ resource "panos_vulnerability_security_profile" "fw1_vuln_profile" {
 
   rule {
     name           = "simple-client-high"
-    threat_name    = "any"
     category       = "any"
+    threat_name    = "any"
     action         = "drop"
     host           = "client"
     severities     = ["high"]
@@ -79,8 +79,8 @@ resource "panos_vulnerability_security_profile" "fw1_vuln_profile" {
 
   rule {
     name           = "simple-client-medium"
-    threat_name    = "any"
     category       = "any"
+    threat_name    = "any"
     action         = "default"
     host           = "client"
     severities     = ["medium"]
@@ -91,8 +91,8 @@ resource "panos_vulnerability_security_profile" "fw1_vuln_profile" {
 
   rule {
     name           = "simple-server-critical"
-    threat_name    = "any"
     category       = "any"
+    threat_name    = "any"
     action         = "drop"
     host           = "server"
     severities     = ["critical"]
@@ -103,8 +103,8 @@ resource "panos_vulnerability_security_profile" "fw1_vuln_profile" {
 
   rule {
     name           = "simple-server-high"
-    threat_name    = "any"
     category       = "any"
+    threat_name    = "any"
     action         = "drop"
     host           = "server"
     severities     = ["high"]
@@ -115,8 +115,8 @@ resource "panos_vulnerability_security_profile" "fw1_vuln_profile" {
 
   rule {
     name           = "simple-server-medium"
-    threat_name    = "any"
     category       = "any"
+    threat_name    = "any"
     action         = "default"
     host           = "server"
     severities     = ["medium"]
@@ -172,26 +172,131 @@ resource "panos_security_profile_group" "fw1_sec_profile_outbound" {
 }
 
 # ================================================================
-# FW2 - Security Profiles (Same Config)
+# FW2 - Security Profiles (Same Config as FW1)
 # ================================================================
 
 resource "panos_anti_spyware_security_profile" "fw2_asp_profile" {
-  provider = panos.fw2
+  provider    = panos.fw2
   name        = "rone-asp"
   description = "rone-asp"
 
-  rule = panos_anti_spyware_security_profile.fw1_asp_profile.rule
+  rule {
+    name           = "simple-critical"
+    threat_name    = "any"
+    category       = "any"
+    action         = "drop"
+    packet_capture = "extended-capture"
+    severities     = ["critical"]
+  }
+
+  rule {
+    name           = "simple-high"
+    threat_name    = "any"
+    category       = "any"
+    action         = "drop"
+    packet_capture = "extended-capture"
+    severities     = ["high"]
+  }
+
+  rule {
+    name           = "simple-medium"
+    threat_name    = "any"
+    category       = "any"
+    action         = "default"
+    packet_capture = "single-packet"
+    severities     = ["medium"]
+  }
+
+  rule {
+    name           = "low"
+    threat_name    = "any"
+    category       = "any"
+    action         = "alert"
+    packet_capture = "disable"
+    severities     = ["low"]
+  }
+
   lifecycle {
     create_before_destroy = true
   }
 }
 
 resource "panos_vulnerability_security_profile" "fw2_vuln_profile" {
-  provider = panos.fw2
+  provider    = panos.fw2
   name        = "rone-vuln"
   description = "rone-vuln"
 
-  rule = panos_vulnerability_security_profile.fw1_vuln_profile.rule
+  rule {
+    name           = "simple-client-critical"
+    category       = "any"
+    threat_name    = "any"
+    action         = "drop"
+    host           = "client"
+    severities     = ["critical"]
+    cves           = ["any"]
+    vendor_ids     = ["any"]
+    packet_capture = "extended-capture"
+  }
+
+  rule {
+    name           = "simple-client-high"
+    category       = "any"
+    threat_name    = "any"
+    action         = "drop"
+    host           = "client"
+    severities     = ["high"]
+    cves           = ["any"]
+    vendor_ids     = ["any"]
+    packet_capture = "extended-capture"
+  }
+
+  rule {
+    name           = "simple-client-medium"
+    category       = "any"
+    threat_name    = "any"
+    action         = "default"
+    host           = "client"
+    severities     = ["medium"]
+    cves           = ["any"]
+    vendor_ids     = ["any"]
+    packet_capture = "single-packet"
+  }
+
+  rule {
+    name           = "simple-server-critical"
+    category       = "any"
+    threat_name    = "any"
+    action         = "drop"
+    host           = "server"
+    severities     = ["critical"]
+    cves           = ["any"]
+    vendor_ids     = ["any"]
+    packet_capture = "extended-capture"
+  }
+
+  rule {
+    name           = "simple-server-high"
+    category       = "any"
+    threat_name    = "any"
+    action         = "drop"
+    host           = "server"
+    severities     = ["high"]
+    cves           = ["any"]
+    vendor_ids     = ["any"]
+    packet_capture = "extended-capture"
+  }
+
+  rule {
+    name           = "simple-server-medium"
+    category       = "any"
+    threat_name    = "any"
+    action         = "default"
+    host           = "server"
+    severities     = ["medium"]
+    cves           = ["any"]
+    vendor_ids     = ["any"]
+    packet_capture = "single-packet"
+  }
 }
 
 resource "panos_url_filtering_security_profile" "fw2_url_profile" {
